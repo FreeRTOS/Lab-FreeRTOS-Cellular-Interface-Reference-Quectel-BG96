@@ -48,6 +48,12 @@
 
 /*-----------------------------------------------------------*/
 
+static void _Cellular_ProcessCereg( CellularContext_t * pContext,
+                                    char * pInputLine );
+static void _Cellular_ProcessCgreg( CellularContext_t * pContext,
+                                    char * pInputLine );
+static void _Cellular_ProcessCreg( CellularContext_t * pContext,
+                                   char * pInputLine );
 static void _Cellular_ProcessPowerDown( CellularContext_t * pContext,
                                         char * pInputLine );
 static void _Cellular_ProcessPsmPowerDown( CellularContext_t * pContext,
@@ -78,9 +84,9 @@ static CellularPktStatus_t prvStoreDirectPushSocketData( CellularContext_t * pCo
 /* Try to Keep this map in Alphabetical order. */
 CellularAtParseTokenMap_t CellularUrcHandlerTable[] =
 {
-    { "CEREG",          Cellular_CommonUrcProcessCereg },
-    { "CGREG",          Cellular_CommonUrcProcessCgreg },
-    { "CREG",           Cellular_CommonUrcProcessCreg  },
+    { "CEREG",          _Cellular_ProcessCereg         },
+    { "CGREG",          _Cellular_ProcessCgreg         },
+    { "CREG",           _Cellular_ProcessCreg          },
     { "POWERED DOWN",   _Cellular_ProcessPowerDown     },
     { "PSM POWER DOWN", _Cellular_ProcessPsmPowerDown  },
     { "QIND",           _Cellular_ProcessIndication    },
@@ -91,6 +97,48 @@ CellularAtParseTokenMap_t CellularUrcHandlerTable[] =
 };
 
 uint32_t CellularUrcHandlerTableSize = sizeof( CellularUrcHandlerTable ) / sizeof( CellularAtParseTokenMap_t );
+
+/*-----------------------------------------------------------*/
+
+static void _Cellular_ProcessCereg( CellularContext_t * pContext,
+                                    char * pInputLine )
+{
+    CellularPktStatus_t pktStatus;
+
+    pktStatus = Cellular_CommonUrcProcessCereg( pContext, pInputLine );
+    if( pktStatus != CELLULAR_PKT_STATUS_OK )
+    {
+        LogError( ( "_Cellular_ProcessCereg: process CEREG failed %d", pktStatus ) );
+    }
+}
+
+/*-----------------------------------------------------------*/
+
+static void _Cellular_ProcessCgreg( CellularContext_t * pContext,
+                                    char * pInputLine )
+{
+    CellularPktStatus_t pktStatus;
+
+    pktStatus = Cellular_CommonUrcProcessCgreg( pContext, pInputLine );
+    if( pktStatus != CELLULAR_PKT_STATUS_OK )
+    {
+        LogError( ( "_Cellular_ProcessCgreg: process CGREG failed %d", pktStatus ) );
+    }
+}
+
+/*-----------------------------------------------------------*/
+
+static void _Cellular_ProcessCreg( CellularContext_t * pContext,
+                                   char * pInputLine )
+{
+    CellularPktStatus_t pktStatus;
+
+    pktStatus = Cellular_CommonUrcProcessCreg( pContext, pInputLine );
+    if( pktStatus != CELLULAR_PKT_STATUS_OK )
+    {
+        LogError( ( "_Cellular_ProcessCreg: process CREG failed %d", pktStatus ) );
+    }
+}
 
 /*-----------------------------------------------------------*/
 
